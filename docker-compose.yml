@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: simple_database
+    env_file: .env
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  web:
+    image: flask-app
+    env_file: .env
+    depends_on:
+      - db
+
+  bot:
+    image: reminder-bot:0.1.0-SNAPSHOT
+    container_name: reminder-bot
+    env_file: .env
+    depends_on:
+      - db
+      - web
